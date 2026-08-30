@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { response } from "express";
+import {response}  from "express";
 
 import fs from "fs"; //fs (file system)  that use unlink for delete file/image/video from temporary file after upload clodinary
 
@@ -9,7 +9,7 @@ cloudinary.config({
         api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
     });
 
-    const upoadOnCloudinary = async (localFilePath) => {
+    const uploadOnCloudinary = async (localFilePath) => {
         try{
             if(!localFilePath) return null
             //upload the file on clodinary
@@ -17,12 +17,13 @@ cloudinary.config({
                 resource_type: "auto"
             })
             //file has been uploaded suuccesfuly
-            console.log("file is uploaded on clodinary", response.url);
-            return response
+            // console.log("file is uploaded on clodinary", response.url);
+            fs.unlinkSync(localFilePath)
+            return response;
         } catch (error){
             fs.unlinkSync(localFilePath) // remove the localy saved file as the upload operation got failed
             return null;
         }
     }
 
-    export {upoadOnCloudinary}
+    export {uploadOnCloudinary}
